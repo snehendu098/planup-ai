@@ -5,13 +5,13 @@ import {
   Checkbox,
   Button,
   Typography,
-  Textarea,
 } from "@material-tailwind/react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const options = ["Budget Friendly", "Luxurious"];
+const options = ["Budget Friendly", "Mid Range", "Luxurious"];
 
 const Form = () => {
   const [value, setValue] = React.useState(options[null]);
@@ -32,10 +32,15 @@ const Form = () => {
             <Input
               size="lg"
               type="tel"
-              // label="Name"
-              className="focus:!border-t-blue-500"
+              className="focus:!border-t-blue-500 active:!border-t-blue-500 !border-t-blue-gray-200"
               variant="text"
               placeholder="Mumbai, India"
+              labelProps={{
+                className: "before:content-none after:content-none",
+              }}
+              containerProps={{
+                className: "min-w-0",
+              }}
             />
           </div>
 
@@ -56,8 +61,23 @@ const Form = () => {
               className=""
             />
           </div>
+          {/* Date */}
+          <div>
+            <p>Start Date</p>
+            <DatePicker className="w-full" />
+          </div>
+          <div>
+            <TextField
+              type={"number"}
+              id="outlined-basic"
+              label="Number of Days"
+              variant="outlined"
+              className="w-full"
+            />
+          </div>
+
           <Button className="mt-6" fullWidth>
-            Find Destination 🔍
+            Generate Itinerary
           </Button>
         </div>
       </form>

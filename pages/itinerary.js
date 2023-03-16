@@ -1,5 +1,6 @@
 import React from "react";
 import Form from "../components/itinerary/Form";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
 const App = () => {
   return (
@@ -10,3 +11,4 @@ const App = () => {
 };
 
 export default App;
+export const getServerSideProps = withPageAuthRequired();
