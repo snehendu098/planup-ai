@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Input,
@@ -258,7 +258,11 @@ const countries = [
   { label: "Zimbabwe", code: "ZW" },
 ];
 
-const DestinationCard = () => {
+const DestinationCard = ({
+  destionationConfig,
+  setDestionationConfig,
+  handleDestClick,
+}) => {
   return (
     <div className="flex flex-col justify-center items-center">
       <Typography variant="h2" color="blue-gray">
@@ -283,6 +287,13 @@ const DestinationCard = () => {
               containerProps={{
                 className: "min-w-0",
               }}
+              value={destionationConfig.interests}
+              onChange={(e) => {
+                setDestionationConfig({
+                  ...destionationConfig,
+                  interests: e.target.value,
+                });
+              }}
             />
           </div>
           {/* country */}
@@ -293,6 +304,13 @@ const DestinationCard = () => {
               //   className="shadow-lg"
               autoHighlight
               getOptionLabel={(option) => option.label}
+              value={destionationConfig.country}
+              onChange={(e, newValue) => {
+                setDestionationConfig({
+                  ...destionationConfig,
+                  country: newValue,
+                });
+              }}
               renderOption={(props, option) => (
                 <Box
                   component="li"
@@ -326,13 +344,22 @@ const DestinationCard = () => {
           </div>
           {/* things to have */}
           <div className="mt-3">
-            <Textarea label="Your likings" />
+            <Textarea
+              label="Your likings"
+              value={destionationConfig.likings}
+              onChange={(e) =>
+                setDestionationConfig({
+                  ...destionationConfig,
+                  likings: e.target.value,
+                })
+              }
+            />
             <p className="text-xs">
               Describe about what things you would like in your visit. Example:
               Food, Culture, Historical sites etc.
             </p>
           </div>
-          <Button className="mt-6" fullWidth>
+          <Button onClick={handleDestClick} className="mt-6" fullWidth>
             Find Destination 🔍
           </Button>
         </div>
