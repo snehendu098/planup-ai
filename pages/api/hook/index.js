@@ -1,17 +1,14 @@
-import mysql from "mysql2";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
-const handler = (req, res) => {
-  const connection = mysql.createConnection(req.body.db);
-  connection.query(
-    `INSERT INTO User (id, points) VALUES (?, 15);`,
-    [req.body.id],
-    function (err, res, fields) {
-      if (err) throw err;
-      console.log(res);
-    }
-  );
-  connection.end();
-  res.status(200).json({ message: "success" });
+const handler = async (req, res) => {
+  try {
+    await prisma.user.create({ data: { id: req.body.id } });
+
+    res.status(200).json({ message: "success" });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 };
 
 export default handler;

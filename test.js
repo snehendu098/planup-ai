@@ -1,14 +1,27 @@
 require("dotenv").config();
 const mysql = require("mysql2");
 const connection = mysql.createConnection(process.env.DATABASE_URL_NODE);
-console.log("Connected to PlanetScale!");
-connection.query(
-  `INSERT INTO User (id, points) VALUES (?, 15);`,
-  [15],
-  function (err, res, fields) {
-    console.log(err);
+const test = () => {
+  connection.query("SELECT * FROM User", (err, res) => {
+    if (err) throw err;
     console.log(res);
-  }
-);
-console.log("done");
-connection.end();
+  });
+  connection.end();
+  console.log("Connected to PlanetScale!");
+};
+
+const fetchData = async () => {
+  const res = await fetch("http://localhost:3000/api/hook", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id: "gykb6q9t0ewe3xi1n6rh",
+    }),
+  });
+  // const data = await res.json();
+  console.log(res);
+};
+
+test();
