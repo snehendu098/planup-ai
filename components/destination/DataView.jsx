@@ -1,6 +1,6 @@
 import { Grid } from "@material-ui/core";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { destToLatLang } from "../../helper/otherHelpers";
 import PlaceCard from "./DestinationPlaceCard";
 

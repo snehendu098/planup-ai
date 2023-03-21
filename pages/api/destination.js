@@ -19,7 +19,6 @@ const generateDestination = async (req, res) => {
     LIKINGS: ${likings}
     PLACES: `;
   const data = await generateAction(prompt);
-  console.log(data);
   res.status(200).json({ data });
 };
 

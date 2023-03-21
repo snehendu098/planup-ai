@@ -1,3 +1,5 @@
+import { Typography } from "@material-tailwind/react";
+import { Grid } from "@material-ui/core";
 import React from "react";
 
 const DataView = ({ data }) => {

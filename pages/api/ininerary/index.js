@@ -1,4 +1,4 @@
-import generateAction from "../../helper/openaireq";
+import generateAction from "../../../helper/openaireq";
 // TODO: Database save
 const generateDestination = async (req, res) => {
   const { place, days, startdate, budget } = req.body;
@@ -54,7 +54,6 @@ const generateDestination = async (req, res) => {
   NUMBER OF DAYS OF TOUR: ${days}
   ADVICE:`;
   const data = await generateAction(prompt, 2700);
-  console.log(data);
   res.status(200).json({ data });
 };
 

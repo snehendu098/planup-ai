@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import Form from "../components/itinerary/Form";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { toast } from "react-toastify";
-import { formatDataString } from "../helper/otherHelpers";
+import { destToLatLang, formatDataString } from "../helper/otherHelpers";
 
 import axios from "axios";
-import { GoogleMap, LoadScript } from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import DataView from "../components/itinerary/DataView";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 const options = ["Budget Friendly", "Mid Range", "Luxurious"];
 
@@ -19,9 +20,30 @@ const App = () => {
     days: "",
   });
 
-  const [data, setData] = useState([]);
+  const m = useUser();
 
-  console.log(map);
+  const [data, setData] = useState([]);
+  const [bounds, setBounds] = useState(null);
+  const [location, setLocation] = useState(null);
+
+  console.log(m);
+
+  useEffect(() => {
+    const getPscale = async () => {
+      try {
+        const users = await fetch("/api/db", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        console.log("data", users);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getPscale();
+  }, []);
 
   const formClick = async () => {
     if (
@@ -31,6 +53,13 @@ const App = () => {
     ) {
       console.log(itineraryConfig);
       return toast.error("Please provide all the details");
+    }
+
+    const pairs = await destToLatLang(itineraryConfig.dest);
+    if (!pairs) {
+      return toast.error("Please provide a valid destination");
+    } else {
+      setLocation(pairs);
     }
 
     const res = await axios.post("/api/itinerary", {
@@ -64,12 +93,14 @@ const App = () => {
           <LoadScript googleMapsApiKey={process.env.MAPS_API}>
             <GoogleMap
               mapContainerClassName="md:w-full md:h-full w-[90vw] h-[40vh] md:min-h-[70vh]"
-              center={{ lat: -3.745, lng: -38.523 }}
-              zoom={5}
+              center={location || { lat: -3.745, lng: -38.523 }}
+              zoom={10}
               onLoad={(map) => {
                 setMap(map);
               }}
-            ></GoogleMap>
+            >
+              {location && <Marker position={location} />}
+            </GoogleMap>
           </LoadScript>
         </div>
       </div>
