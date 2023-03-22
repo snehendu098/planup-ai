@@ -7,7 +7,6 @@ import { destToLatLang, formatDataString } from "../helper/otherHelpers";
 import axios from "axios";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import DataView from "../components/itinerary/DataView";
-import { useUser } from "@auth0/nextjs-auth0/client";
 
 const options = ["Budget Friendly", "Mid Range", "Luxurious"];
 
@@ -20,30 +19,9 @@ const App = () => {
     days: "",
   });
 
-  const m = useUser();
-
   const [data, setData] = useState([]);
   const [bounds, setBounds] = useState(null);
   const [location, setLocation] = useState(null);
-
-  console.log(m);
-
-  useEffect(() => {
-    const getPscale = async () => {
-      try {
-        const users = await fetch("/api/db", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        console.log("data", users);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getPscale();
-  }, []);
 
   const formClick = async () => {
     if (
@@ -61,7 +39,7 @@ const App = () => {
     } else {
       setLocation(pairs);
     }
-
+    toast.success("Location fetched successfully, generating Itinerary");
     const res = await axios.post("/api/itinerary", {
       place: itineraryConfig.dest,
       days: itineraryConfig.days,
@@ -86,7 +64,14 @@ const App = () => {
               formClick={formClick}
             />
           )}
-          {data.length !== 0 && <DataView data={data} />}
+          {data.length !== 0 && (
+            <DataView
+              data={data}
+              location={location}
+              budget={itineraryConfig.budget}
+              dest={itineraryConfig.dest}
+            />
+          )}
         </div>
         {/* map */}
         <div className="lg:col-span-2 col-span-1">
@@ -97,6 +82,9 @@ const App = () => {
               zoom={10}
               onLoad={(map) => {
                 setMap(map);
+                if (map) {
+                  console.log(map.getBounds());
+                }
               }}
             >
               {location && <Marker position={location} />}

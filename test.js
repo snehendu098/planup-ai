@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { default: axios } = require("axios");
 const mysql = require("mysql2");
 const connection = mysql.createConnection(process.env.DATABASE_URL_NODE);
 const test = () => {
@@ -11,17 +12,11 @@ const test = () => {
 };
 
 const fetchData = async () => {
-  const res = await fetch("http://localhost:3000/api/hook", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      id: "gykb6q9t0ewe3xi1n6rh",
-    }),
+  const res = await axios.post("https://planup-ai.vercel.app/api/hook", {
+    id: "abcxyz",
   });
-  // const data = await res.json();
   console.log(res);
+  test();
 };
 
 test();

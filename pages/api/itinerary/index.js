@@ -54,6 +54,7 @@ const generateDestination = async (req, res) => {
   NUMBER OF DAYS OF TOUR: ${days}
   ADVICE:`;
   const data = await generateAction(prompt, 2700);
+  console.log(data);
   res.status(200).json({ data });
 };
 

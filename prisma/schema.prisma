@@ -15,12 +15,13 @@ model User {
 }
 
 model Plan {
-  id         Int    @id @default(autoincrement())
-  user       User   @relation(fields: [userId], references: [id])
-  userId     String
-  plan       String @db.LongText
-  boundaries Json
-  location   Json
+  id       Int    @id @default(autoincrement())
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String
+  plan     String @db.LongText
+  budget   String
+  location Json
+  name     String
 
   @@index([userId])
 }

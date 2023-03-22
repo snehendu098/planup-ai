@@ -1,7 +1,33 @@
+import axios from "axios";
 import Head from "next/head";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import DisplayFrontCard from "../components/Card";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function Home() {
+  const [saved, setSaved] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { user } = useUser();
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get("/api/db/all-itinerary");
+      setSaved(res.data.itinerary || null);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error fetching your saved plans");
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
+
   return (
     <div className="w-full pb-10 ">
       <Head>
@@ -36,6 +62,16 @@ export default function Home() {
           />
         </div>
       </div>
+      {saved && (
+        <div className="flex items-center justify-center mt-5 flex-col">
+          <p className="text-3xl font-bold">Saved Plans</p>
+          <div className="w-full grid grid-cols-2 gap-4">
+            {saved.map((plan, index) => (
+              <div className="w-full bg-white rounded-md shadow-lg"></div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

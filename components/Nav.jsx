@@ -7,10 +7,12 @@ import {
 } from "@material-tailwind/react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
+import axios from "axios";
 
 export default function Nav() {
   const [openNav, setOpenNav] = useState(false);
   const { user } = useUser();
+  const [data, setData] = useState(null);
 
   useEffect(() => {
     window.addEventListener(
@@ -18,6 +20,17 @@ export default function Nav() {
       () => window.innerWidth >= 960 && setOpenNav(false)
     );
   }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      const res = await axios.post("/api/db", {
+        id: user.sub.split("|")[1],
+      });
+      setData(res.data);
+      console.log("data", res);
+    }
+    user && fetchData();
+  }, [user]);
 
   return (
     <div className="w-full py-2 px-4 lg:px-8 lg:py-4 bg-white rounded-md shadow-xl">
@@ -28,7 +41,7 @@ export default function Nav() {
             <span className="text-blue-500">Up</span>
           </p>
         </Link>
-        <div>
+        <div className="flex items-center">
           {user && (
             <Typography
               variant="gradient"
@@ -47,6 +60,11 @@ export default function Nav() {
               <span>{(!user && "Log In") || "Log Out"}</span>
             </Button>
           </a>
+          {user && data && (
+            <p className="ml-4 p-3 bg-gray-600 text-white rounded-md">
+              🪙 {data?.points}
+            </p>
+          )}
         </div>
         <IconButton
           variant="text"
